@@ -1,7 +1,7 @@
 options:
 	NoPermission: &8[&6Vile&8] &7Sorry but you do not have enough permissions to execute this command!
 	Version: 0.1
-	Prefix: &8[&bVILE&8] &7
+	Prefix: &8[&bVile&8] &7
 	
 	
 on first join:
@@ -17,7 +17,7 @@ on first join:
 	
 on join:
 	if player has permission "rank.vile":
-		broadcast "&b>&c>&a> &6[VILE] &6%player% &a<&c<&b<"
+		broadcast "&b>&c>&a> &b[Vile] &6%player% &a<&c<&b<"
 		launch creeper firework colored red at player timed 0.1
 		launch star firework colored blue at player timed 0.1
 		launch burst firework colored yellow at player timed 0.1
