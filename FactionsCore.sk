@@ -239,7 +239,7 @@ command /bug [<string>]:
                stop
           send "&aBug submitted, thanks for helping us out!" to player
           loop all players:
-               loop-player has permission rank.staff":
+               loop-player has permission "rank.staff":
                     send "&bBug &7» &r(%player%) &7%argument 1%" to loop-player
 
 command /playtime [<text>]:
