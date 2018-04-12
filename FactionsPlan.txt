@@ -2,6 +2,7 @@ Stuff that needs to be added to Factions
 
 - /bounties - Covered by Chin /
 - TNTFill / 
+- Balance Kits
 - Sign Shops
 - Crate Holograms Like This - http://prntscr.com/j04fir
 
