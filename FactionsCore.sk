@@ -1,0 +1,219 @@
+options:
+	NoPermission: &8[&6Vile&8] &7Sorry but you do not have enough permissions to execute this command!
+	Version: 0.1
+	Prefix: &8[&bVILE&8] &7
+	
+	
+on first join:
+	wait 20 seconds
+	make console execute command "sound VILLAGER_IDLE %player%"
+	send "&f"
+	send "&bWe noticed you haven't joined before."
+	send "&bIf you need help please contact a staff member!"
+	send "&bIf you would like to support us, please visit:"
+	send "&bhttp://store.vileskyblock.me/"
+	send "&f"
+	
+	
+on join:
+	if player has permission "rank.vile":
+		broadcast "&b>&c>&a> &6[VILE] &6%player% &a<&c<&b<"
+		launch creeper firework colored red at player timed 0.1
+		launch star firework colored blue at player timed 0.1
+		launch burst firework colored yellow at player timed 0.1
+		create an animated ball effect at location of player with id "1" with particle flame
+		wait 2 seconds
+		delete effect "1"
+	if player has permission "rank.hayze":
+		broadcast "&b>&7>&b> &7[&bHAYZE&7] &b&n%player%&f &b<&7<&b<"
+		launch creeper firework colored red at player timed 0.1
+		launch star firework colored blue at player timed 0.1
+		launch burst firework colored yellow at player timed 0.1
+		create an animated ball effect at location of player with id "1" with particle flame
+		wait 2 seconds
+		delete effect "1"
+
+on join:
+    wait 10 ticks
+    loop 50 times:
+        message " "
+    message "&e&l    &8<&f&l*&8> &b&lVILE &f&lFACTIONS &8<&f&l*&8>"
+    message "&r "
+    message "&f    * &7Welcome back to the &bFactions &fCloud,&e %player%&7!   "
+    message "&r      "
+    message "&e&lSTORE &fhttp://store.vileskyblock.me"
+    message "&a&lWEBSITE &fhttps://vile.forums.gg"
+    message "&5&lDISCORD &fhttp://discord.me/VileSkyblock"
+	
+	
+command /help:
+	trigger:
+		message "&8&m--------------------------------------------------"
+		message "&7Here are some useful commands!"
+		message " &b✖ &f/help &7- &bOpens up the help menu"
+		message " &b✖ &f/tnt &7- &bCraft all TNT in your current inventory &3( Requires Hero Rank )"
+		message " &b✖ &f/tntauto &7- &bAutomatically Crafts all TNT every 3 seconds &b( Requires Knight Rank )"
+		message " &b✖ &f/tntfill <radius> &7- &bFills nearby dispensers with TNT"
+		message " &b✖ &f/nv &7- &bGives you permanent Nightvision"
+		message " &b✖ &f/ &7- &bGives you permanent Nightvision"
+		message "&8&m--------------------------------------------------"
+		
+command /shelp:
+	permission: is.staff
+	permission message: &cNo permission to execute this command
+	trigger:
+		message "&8&m--------------------------------------------------"
+		message "&7Here are some useful commands!"
+		message " &8✖ &3/help &7- &bOpens up the help menu"
+		message " &8✖ &3/shelp &7- &bOpens up the staff help menu"
+		message " &8✖ &3/ban [player] [reason] &7- &bBans arg-1"
+		message " &8✖ &3/kick [player] [reason] &7- &bKicks arg-1"
+		message " &8✖ &3/warn [player] [reason] &7- &bWarns arg-1"	
+		message "&8&m--------------------------------------------------"
+		
+command /info [<player>]:
+    usage: /info <player>
+    trigger:
+        if arg 1 is set:
+            message "%nl%&bUsername&7: &7%arg-1%"
+            message "&bRank&7: &7%arg-1's prefix%"
+            message "&bWorld&7: &7%arg-1's world% %nl%"
+        else:
+            message "%nl%&bUsername&7: &7%player%"
+            message "&bRank&7: &7%player's prefix%"
+            message "&bWorld&7: &7%player's world% %nl%"
+		
+		
+# Diamond Ore Broadcast # 
+
+
+mine of diamond ore:
+	{diamonds::%player%::%location of event-block%} is not set
+	loop blocks in radius 4 around block:
+		loop-block is diamond ore:
+			add 1 to {_diamondore}
+			set {diamonds::%player%::%location of loop-block%} to true
+	broadcast "{@Prefix} &b%player%&7 has found &b%{_diamondore}% &7diamonds&b!"
+	
+# Freeze Command #
+
+command /freeze [<player>]:
+	permission: VileCore.freeze
+	permission message: &cYou have no permission to execute this command
+	executable by: players
+	aliases: /ss
+	trigger:
+		if arg-1 is set:
+			if {FactionsCore.%argument%.frozen} isn't set:
+				set {FactionsCore.%argument%.frozen} to true
+				set {FactionsCore.%argument%.comm} to true
+				set {freezeloc.%player%} to true
+				set {FactionsCore.%argument%.invincibility.frozen} to true
+				set {freezeloc.%argument%} to arg-1's location
+				send "&4You have currently been frozen by a member of staff!" to the argument
+				send "&4DO NOT Leave the server otherwise you will be perm banned!" to the argument
+				send "" to the argument
+				send "&7Join our discord @ &bhttps://discord.gg/sAHRskf" to the argument
+				send "&aYou have successfully frozen %argument 1%" to the player
+				set the arg-1's walk speed to 0
+				set the arg-1's fly speed to 0
+			else:
+				if {FactionsCore.%argument%.frozen} is set:
+					delete {FactionsCore.%argument%.frozen}
+					delete {FactionsCore.%argument%.comm}
+					send "&cYou have been unfrozen! Have a nice day!" to the argument
+					send "&a%argument% has been Unfrozen!" to the player
+					reset the arg-1's walk speed
+					reset the arg-1's fly speed
+					wait 5 seconds
+					delete {FactionsCore.%argument%.invincibility.frozen}
+		if arg-1 isn't set:
+			message "{@Prefix} &cCorrect usage: /freeze [<player>] or /ss [<player>]"
+					
+		
+on death:
+    send "{@Prefix} &7You have died to &b%attacker%" to player
+    add 1 to {deaths.%player%}
+    add 1 to {kills.%attacker%}
+    set {kdr.%player%} to {kills.%player%}/{deaths.%player%}
+    set {kdr.%attacker%} to {kills.%attacker%}/{deaths.%attacker%}
+ 
+command /stats [<offline player>]:
+    trigger:
+        if arg 1 is set:
+            send "%nl%&b%arg-1%&7's statistics are listed below:"
+            send "&bKills&8: &b%{kills.%arg-1%}%"
+            send "&bDeaths&8: &b%{deaths.%arg-1%}%"
+            send "&bKDR&8: &b%{kdr.%arg-1%}%"
+            send ""
+        else:
+            send "%nl%&b%player%&7's statistics are listed below:"
+            send "&bKills&8: &b%{kills.%player%}%"
+            send "&bDeaths&8: &b%{deaths.%player%}%"
+            send "&bKDR&8: &b%{kdr.%player%}%"
+            send "&c"
+        execute console command "/execute %player% ~ ~ ~ /playsound entity.experience_orb.pickup master %player% ~ ~ ~"
+ 
+on first join:
+    set {deaths.%player%} to 0
+    set {kills.%player%} to 0
+    set {kdr.%player%} to 0
+ 
+on right click:
+    player is holding a sword:
+        cancel event
+ 
+command /resetstats <offline player>:
+    permission: sk.admin
+    trigger:
+        send "%nl%{@Prefix} &7You have &creset &7the statistics of &b%arg-1%&7!%nl%" to player
+        set {deaths.%arg-1%} to 0
+        set {kills.%arg-1%} to 0
+        set {kdr.%arg-1%} to 0		
+		
+# Staff Commands #
+
+
+command /staffchat [<text>]:
+	aliases: /sc, /s,
+	permission: rank.juniormod
+	permission message: &c&lNo
+	trigger:
+		loop all players:
+			if arg 1 is not set:
+				message "&8[&bVILE&8] &cError, use &7/staffchat [Message]"
+				stop trigger
+			if arg 1 is set:
+				if loop-player has permission "rank.juniormod":
+					send "&7[&cStaffChat&7] &7%player% &9» &f%arg 1%"
+					stop trigger
+					
+					
+					
+command /save:
+	permission: rank.admin
+	permission message: &cYou do not have the sufficient permissions required to execute this command!
+	trigger:
+		broadcast "%nl%&cThe server is currently saving, please expect some lagg%nl% "
+		make console execute command "/save-all"
+		make console execute command "save-all"
+		make player execute command "/dl world"
+		wait 10 seconds
+		make console execute command "/save-all"
+		make console execute command "save-all"
+		broadcast "%nl%&AThe server has successfully saved!%nl% "
+		
+		
+every 15 minutes:
+	make console execute command "/save"
+
+
+command /plugins:
+	aliases: /pl, /ver, /version, /about, /?, /icanhasbukkit, /bukkit:plugins, /bukkit:pl, /bukkit:about, /bukkit:version, /bukkit:ver, /bukkit:me, /bukkit:help
+	trigger:
+		send "&7&m--------------------------"
+		send ""
+		send "&b&lPLUGINS&7:"
+		send "&7Viewing plugins has been &cblocked&7!"
+		send ""
+		send "&7&m--------------------------"
