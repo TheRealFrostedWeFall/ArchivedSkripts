@@ -242,45 +242,58 @@ command /bug [<string>]:
                loop-player has permission "rank.staff":
                     send "&bBug &7» &r(%player%) &7%argument 1%" to loop-player
 
-command /playtime [<text>]:
+
+variables:
+	{second::%player%} = 0
+	{minute::%player%} = 0
+	{hour::%player%} = 0
+	{day::%player%} = 0
+
+every second:
+	loop all players:
+		add 1 to {second::%loop-player%}
+		if {second::%loop-player%} is 60:
+			subtract 60 from {second::%loop-player%}
+			add 1 to {minute::%loop-player%}
+		if {minute::%loop-player%} is 60:
+			subtract 60 from {minute::%loop-player%}
+			add 1 to {hour::%loop-player%}
+		if {hour::%loop-player%} is 24:
+			subtract 24 from {hour::%loop-player%}
+			add 1 to {day::%loop-player%}
+			
+
+variables:
+	{second::%player%} = 0
+	{minute::%player%} = 0
+	{hour::%player%} = 0
+	{day::%player%} = 0
+
+every second:
+	loop all players:
+		add 1 to {second::%loop-player%}
+		if {second::%loop-player%} is 60:
+			subtract 60 from {second::%loop-player%}
+			add 1 to {minute::%loop-player%}
+		if {minute::%loop-player%} is 60:
+			subtract 60 from {minute::%loop-player%}
+			add 1 to {hour::%loop-player%}
+		if {hour::%loop-player%} is 24:
+			subtract 24 from {hour::%loop-player%}
+			add 1 to {day::%loop-player%}
+			
+command /playtime [<offline player>]:
 	trigger:
 		if arg 1 is not set:
-			message "&b&lPlaytime &f• &fYou've played for:"
-			message "&f• Days: &b%{Days.%uuid of player%}% d"
-			message "&f• Hours: &b%{Hours.uuid of %player%}% h"
-			message "&f• Minutes: &b%{Minutes.uuid of %player%}% m"
-			message "&f• Seconds: &b%{Seconds.uuid of %player%}% s"
-		if arg 1 is set:
-			if arg 1 is "help":
-				message "&b&lPlaytime Help&f"
-				message "&b/playtime&f Show your playtime."
-				message "&b/playtime help&f Show this message."
-			if arg 1 is not "help":
-				message "Invalid argument!"
+			send "%nl%{@Prefix} &fYour playtime is shown below:%nl%&bDays: &f%{day::%player%}%%nl%&bHours: &f%{hour::%player%}%%nl%&bMinutes: &f%{minute::%player%}%%nl%&bSeconds: &f%{second::%player%}%%nl%"
+			execute console command "/execute %player% ~ ~ ~ /playsound entity.experience_orb.pickup master %player% ~ ~ ~"
+		else:
+			send "%nl%{@Prefix} &7%arg-1%&f's playtime is shown below:%nl%&bDays: &f%{day::%arg-1%}%%nl%&bHours: &f%{hour::%arg-1%}%%nl%&bMinutes: &f%{minute::%arg-1%}%%nl%&bSeconds: &f%{second::%arg-1%}%%nl%"
+			execute console command "/execute %player% ~ ~ ~ /playsound entity.experience_orb.pickup master %player% ~ ~ ~"
 
-every 1 second:
-	loop all players:
-		add 1 to {Seconds.%uuid of loop-player%}
-		if {Seconds.%uuid of loop-player%} is 60:
-			set {Seconds.%uuid of loop-player%} to 0
-			add 1 to {Minutes.%uuid of loop-player%}
-		if {Minutes.%uuid of loop-player%} is 60:
-			if {Seconds.%uuid of loop-player%} is 0:
-				add 1 to {Hours.%uuid of loop-player%}
-				set {Seconds.%uuid of loop-player%} to 0
-				set {Minutes.%uuid of loop-player%} to 0
-		if {Hours.%uuid of loop-player%} is 24:
-			if {Minutes.%uuid of loop-player%} is 60:
-				if {Seconds.%uuid of loop-player%} is 0:
-					add 1 to {Days.%uuid of loop-player%}
-					set {Hours.%uuid of loop-player%} to 0
-					set {Minutes.%uuid of loop-player%} to 0
-					set {Seconds.%uuid of loop-player%} to 0
-		if {Seconds.%uuid of loop-player%} is not set:
-			set {Seconds.%uuid of loop-player%} to 0
-		if {Minutes.%uuid of loop-player%} is not set:
-			set {Minutes.%uuid of loop-player%} to 0
-		if {Hours.%uuid of loop-player%} is not set:
-			set {Hours.%uuid of loop-player%} to 0
-		if {Days.%uuid of loop-player%} is not set:
-			set {Days.%uuid of loop-player%} to 0
+on first join:
+		set {days.%player%} to 0
+		set {hour::%player%} to 0
+		set {minute::%player%} to 0
+		set {second::%player%} to 0
+		set {day::%player%} to 0
