@@ -217,3 +217,17 @@ command /plugins:
 		send "&7Viewing plugins has been &cblocked&7!"
 		send ""
 		send "&7&m--------------------------"
+
+command /clearmychat:
+	trigger:
+		send "&8Clearing Chat.."
+		loop 200 times:
+			send ""
+		send "&aYour chat has been cleared!"
+
+command /clearchat:
+	trigger:
+		send "&8Clearing Chat.."
+		loop 200 times:
+			send ""
+		send "{@Prefix} Chat has been cleared by: &b%player%&7!"
