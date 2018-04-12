@@ -6,6 +6,7 @@ Stuff that needs to be added to Factions
 - Sign Shops
 - Crate Holograms Like This - http://prntscr.com/j04fir
 - Possible NightVision for a specific rank while mining, only lasting a few seconds. Do the same with Haste, speed, etc
+- Add gangs, allies, etc. Could be done using a plugin or skript
 
 - Good Auto Broadcast System - Seen here -> http://prntscr.com/j04w4r
 - Good Functioning Item2Chat System
