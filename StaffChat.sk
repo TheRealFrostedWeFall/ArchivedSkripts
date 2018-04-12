@@ -1,0 +1,66 @@
+command /sc [<text>]:
+    permission: rank.staff
+    permission message: &cNo permission.
+    trigger:
+        if argument 1 is set:
+            loop all players:
+                if loop-player has the permission "rank.staff":
+                    send "&4Staff Chat&8: &7%player% &8» &7%arg-1%"
+                    stop
+        else:
+            if {staffchat.%player%} is false:
+                set {staffchat.%player%} to true
+                send "&eStaff-Chat &aenabled&e!"
+                stop
+            else:
+                set {staffchat.%player%} to false
+                send "&eStaff-Chat &cdisabled&e!"
+                stop
+
+command /s [<text>]:
+    permission: rank.staff
+    permission message: &cNo permission.
+    trigger:
+        if argument 1 is set:
+            loop all players:
+                if loop-player has the permission "rank.staff":
+                    send "&4Staff Chat&8: &7%player% &8» &7%arg-1%"
+                    stop
+        else:
+            if {staffchat.%player%} is false:
+                set {staffchat.%player%} to true
+                send "&eStaff-Chat &aenabled&e!"
+                stop
+            else:
+                set {staffchat.%player%} to false
+                send "&eStaff-Chat &cdisabled&e!"
+                stop
+
+on chat:
+    if {staffchat.%player%} is true:
+        cancel event
+        loop all players:
+            if loop-player has the permission "rank.staff":
+                send "&4Staff Chat&8: &7%player% &8» &7%message%" to loop-player
+                stop
+            else:
+                stop
+
+command /staffchat [<text>]:
+    permission: rank.staff
+    permission message: &cNo permission.
+    trigger:
+        if argument 1 is set:
+            loop all players:
+                if loop-player has the permission "rank.staff":
+                    send "&4Staff Chat&8: &7%player% &8» &7%arg-1%"
+                    stop
+        else:
+            if {staffchat.%player%} is false:
+                set {staffchat.%player%} to true
+                send "&eStaff-Chat &aenabled&e!"
+                stop
+            else:
+                set {staffchat.%player%} to false
+                send "&eStaff-Chat &cdisabled&e!"
+                stop
