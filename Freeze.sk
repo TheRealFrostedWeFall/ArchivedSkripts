@@ -1,0 +1,38 @@
+command /freeze [<offline player>]:
+    usage:
+    permission: server.freeze
+    permission message: &cNo Permission
+        trigger:
+            set {frozen:%arg-1%} to true
+            send &bVile &8- &7You have frozen &c%arg-1%
+            
+on any movement:
+    if {frozen:%arg-1%} is true
+        cancel event
+        send &bVile &8- &7You have been frozen! &4Do not LOG out!
+        send &7Join our discord to get a screenshare. &bhttps://discord.gg/Frjq2jm
+
+on right click on player:
+    if player has the permission "server.freeze":
+    if player is holding ice:
+        execute player command "/freeze %clicked player%" 
+    else:
+        cancel event
+            
+command /unfreeze [<offfline player>]:
+    usage: /unfreeze <player>
+    permission: server.unfreeze
+    permission message: &cNo Permission
+        trigger:
+            if {frozen:%arg-1%} is true
+                send "&b&lVile &8- &7You have unfrozen &6%arg-1%" to player
+                set {frozen:%arg-1%} to false
+            else:
+                send "&bVile &8- &7You cannot unfreeze that player if they are not frozen!" to player
+                
+on right click on player:
+    if player has the permission "server.unfreeze"
+    if player is holding flint_and_steel:
+        execute player command "/unfreeze %clicked player%"
+    else:
+        cancel event
