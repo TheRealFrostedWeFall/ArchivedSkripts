@@ -55,7 +55,6 @@ command /help:
 		message " &b✖ &f/tntauto &7- &bAutomatically Crafts all TNT every 3 seconds &b( Requires Knight Rank )"
 		message " &b✖ &f/tntfill <radius> &7- &bFills nearby dispensers with TNT"
 		message " &b✖ &f/nv &7- &bGives you permanent Nightvision"
-		message " &b✖ &f/ &7- &bGives you permanent Nightvision"
 		message "&8&m--------------------------------------------------"
 		
 command /shelp:
