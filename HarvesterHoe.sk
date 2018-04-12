@@ -1,0 +1,29 @@
+
+options:
+	prefix: &8[&bVile&8] &7
+
+
+on break of sugar cane:
+    if player is holding a diamond hoe named "&a&lHarvester Hoe":
+        add 2 sugar cane to player's inventory
+        set block to air
+        cancel event
+
+
+command /hh <text> [<player>]:
+    permission: rank.admin
+    permission message: &4&lERROR &cYou do not have permissions!
+    usage: &b/hh &f<&bgive&f/&bversion&f> <[&bplayer&f>]
+    trigger:
+        if arg 1 is not set:
+            if arg 2 is not set:
+                send "&8&m-------------------------------------------------"
+                send "&b/hh give <user> &f- Gives a user a HarvesterHoe."
+                send "&8&m-------------------------------------------------"
+        if arg 1 is "give":
+            if arg 2 is not online:
+                send "{@prefix} &eThat player is not online."
+            if arg 2 is online:
+                add 1 diamond hoe named "&a&lHarvester Hoe" to player's inventory
+                send "{@prefix} &eGave 1 HarvesterHoe to &b%arg-2%&e."
+        
