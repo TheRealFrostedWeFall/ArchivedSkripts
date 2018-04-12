@@ -1,0 +1,37 @@
+options:
+    Prefix: &8[&bVile&8]
+    EnableMessage: &7You have toggled nightvision &aON&7!
+    DisableMessage: &7You have toggled nightvision &cOFF&7!
+    NoPermission: &cNo Permission!
+
+variables:
+    {nightvision.mode.%player%} = "False"
+
+command /nightvision:
+    usage: /nightvision
+    aliases: /nv
+    permission: nightvision.use
+    permission message: {@NoPermission}
+    trigger:
+        if {nightvision.mode.%player%} is "False":
+            message "{@Prefix} {@EnableMessage}"
+            set {nightvision.mode.%player%} to "True"
+            apply night vision to the player for 999 days
+        else:
+            if {nightvision.mode.%player%} is "True":
+                message "{@Prefix} {@DisableMessage}"
+                set {nightvision.mode.%player%} to "False"
+                remove night vision from the player
+
+on command "/heal":
+    if player has permission "nightvision.use":
+        {nightvision.mode.%player%} is "True"
+        wait 0.1 ticks
+        apply night vision to the player for 999 days
+        stop
+
+on respawn:
+    {nightvision.mode.%player%} is "True"
+    wait 0.1 ticks
+    apply night vision to the player for 999 days
+    stop
