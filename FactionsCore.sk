@@ -173,22 +173,6 @@ command /resetstats <offline player>:
 # Staff Commands #
 
 
-command /staffchat [<text>]:
-	aliases: /sc, /s,
-	permission: rank.juniormod
-	permission message: &c&lNo
-	trigger:
-		loop all players:
-			if arg 1 is not set:
-				message "&8[&bVILE&8] &cError, use &7/staffchat [Message]"
-				stop trigger
-			if arg 1 is set:
-				if loop-player has permission "rank.juniormod":
-					send "&7[&cStaffChat&7] &7%player% &9» &f%arg 1%"
-					stop trigger
-					
-					
-					
 command /save:
 	permission: rank.admin
 	permission message: &cYou do not have the sufficient permissions required to execute this command!
