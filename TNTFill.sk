@@ -1,0 +1,83 @@
+command /tnt:
+	permission: rank.knight
+	permission message: &b(!) &7You do not have permission to execute this command.
+	trigger:
+		set {_TolTNT} to 0
+		loop 30000 times:
+			if player has 5 gunpowder:
+				remove 5 gunpowder from player 
+				add 1 tnt to player 
+				add 1 to {_TolTNT}
+			else:
+				stop loop 
+		message "&bTNT has been crafted"
+		message "&bTnT Crafted Quantity: &7&l%{_TolTNT}%"
+		set {_TolTNT} to {_TolTNT} * 5
+		message "&bUsed Gunpowder:&7&l %{_TolTNT}%"
+		message "&7Each tnt costs 5x Gunpowder"
+
+			
+command /tntfill [<integer>]:
+	permission: rank.knight
+	permission message: &c(!) You do not have permission to execute this command.
+	trigger: 
+		set {TnTDispensers} to 0
+		set {_Dispensers} to 0
+		set {_MyTNT} to 0
+		if arg 1 is set:
+			if player does not have tnt:
+				message "&7(!) &bYou may only execute this command if you have at least 1 TNT in your inventory."
+				stop 
+			if arg 1 is smaller than 16:
+				loop blocks in radius arg 1 of player:
+					if loop-block is dispenser:
+						add 1 to {_Dispensers} 
+				if {_Dispensers} is greater than 0:
+					loop 3000 times:
+						if player has 1 tnt:
+							remove 1 tnt from player 
+							add 1 to {_MyTNT}
+					set {TnTDispensers} to {_MyTNT} / {_Dispensers} 
+					loop blocks in radius arg 1 of player:
+						if loop-block is dispenser:
+							loop {TnTDispensers} times:
+								add 1 tnt to loop-block's inventory
+					message "&b(!) &7Filled &b%{_Dispensers}%&7 dispensers in radius of &b%arg 1%&7 with &b%{TnTDispensers}%&7 TNT,"
+					message "&7If each dispenser is set with a number with a decimal, the decimal amount of tnt will be deleted."
+					message "&7i.g. all nearby dispensers are filled with 3.45 tnt, it will only be filled with 3 tnt."
+				else:
+					message "&c(!) No dispensers were filled, as there were none nearby."
+			else:
+				message "&c(!) You may not specify a radius greater than 15."
+		if arg 1 is not set:
+			message "&b/tntfill <radius>"
+			message "&7Fills all dispensers in the specified radius, with tnt."
+	
+command /tntauto:
+	permission: rank.knight
+	permission message: &c(!) You do not have permission to execute this command.
+	trigger:
+		if {TnTAutoFill::%player%} is true:
+			set {TnTAutoFill::%player%} to false 
+			message "&c&lDISABLED&7 Auto TNT Crafter."
+		else:
+			set {TnTAutoFill::%player%} to true
+			message "&a&lENABLEED&7 Auto TNT Crafter."
+		
+every 0.1 second:
+	loop all players:
+		if {TnTAutoFill::%loop-player%} is true:
+			if loop-player has 5 gunpowder:
+				set {_TolTNT} to 0
+				loop 30000 times:
+					if loop-player has 5 gunpowder:
+						remove 5 gunpowder from loop-player  
+						add 1 tnt to loop-player 
+						add 1 to {_TolTNT}
+					else:
+						stop loop 
+				message "&bTNT Crafted" to loop-player 
+				message "&bTnT Crafted Quantity: &7&l%{_TolTNT}%" to loop-player 
+				set {_TolTNT} to {_TolTNT} * 5
+				message "&bUsed Gunpowder:&7&l %{_TolTNT}%" to loop-player 
+				message "&7Each tnt costs 5x Gunpowder" to loop-player 
