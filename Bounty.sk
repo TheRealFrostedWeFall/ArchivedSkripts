@@ -16,7 +16,7 @@ on first join:
     set {bamount.%player%} to 0
 
 options:
-    prefix: &6Vile &7»
+    prefix: &bVile &7»
 
 
 command /bounty [<offline player>] [<number>]:
