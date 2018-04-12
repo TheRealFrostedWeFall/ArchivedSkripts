@@ -1,0 +1,187 @@
+#
+# ServerUpdates.sk
+# Informs players of new updates
+# to the server.
+#
+# CREATED BY MCCRAFTER1212
+#
+
+#
+# User Documentation
+#
+# /updates add updateText
+#     > Adds a new update. Will return an updateID used to remove the update
+# /updates remove updateID
+#     > Removes an existing update. Requires an updateID
+# /updates clear
+#     > Removes all existing updates
+# /updates list
+#     > Lists all updates including their updateID
+# /updates view
+#     > Tests the updates on the executing player
+#
+
+#
+# API Documentation
+#
+# addUpdate(updateName: text)
+#     > Adds a new update to the update list
+# removeUpdate(updateID: integer)
+#     > Removes an update
+# clearUpdates()
+#     > Clears all updates
+# viewUpdates(p: player)
+#     > Forces a player to view all updates in the update list
+# hasPlayerPermission(plr: player, perm: text)
+#     > Checks to see if a player has a permission and returns true or false (this was implemented so I didn't have to write a work-around to 'does not have permission')
+# {updates.totalupdates}
+#     > A variable containing the amount of updates ever created
+# {updates.updatesList::*}
+#     > A list containing all current updates (if there are no updates this list does not exist)
+#
+
+
+# Configuration
+options:
+  # If true will display updates as a subtitle (title will be the update number). If false will display updates as a title
+  DISPLAY_SUBTITLE_UPDATES: false
+  # Time between displaying updates
+  COOLDOWN: 2
+  # Title color
+  TITLE_COLOR: &e
+  # Subtitle color
+  SUBTITLE_COLOR: &a
+  # Permission required to use update commands (set to NONE if you don't want a permission to be required)
+  PERMISSION_REQUIRED: updates.admin
+
+  # Error Messages
+  PERMISSION_ERROR_MESSAGE: &cYou don't have permission to use update commands.
+  ARG1_NOT_SET: &cYou must specify a subcommand. E.g. /updates &eadd &cupdateText
+  ARG2_NOT_SET: &cYou must specify a third argument. E.g. /updates remove &eupdateID
+  LIST_IS_EMPTY: &cNo updates found. The update list is currently empty.
+
+  # Success Messages
+  # Variables:
+  #   > %{UPDATE_NAME}% -> The name of the update added (only works for ADDED_UPDATE)
+  #   > %{PLAYER_NAME}% -> The name of the player who ran the command (only works for ADDED_UPDATE and REMOVED_UPDATE)
+  #   > %{UPDATE_ID}% -> The updateID of the update added/removed (only works for ADDED_UPDATE and REMOVED_UPDATE)
+  ADDED_UPDATE: &eSuccessfully added the update ""&a%{UPDATE_NAME}%&e"" and assigned it an ID of &a%{UPDATE_ID}%.
+  REMOVED_UPDATE: &eSuccessfully removed an update with the ID &a%{UPDATE_ID}%.
+  CLEARED_UPDATES: &eSuccessfully cleared all updates from the update list.
+
+  # Update List Formatting
+  LIST_UPDATES_HEADER: &e&lUpdates List
+  LIST_UPDATES_LINE_FORMAT: &a%{UPDATE_ID}% &8| &e%{UPDATE_NAME}%
+
+#! Don't touch anything below here
+# Code #
+on load:
+  if {updates.totalupdates} is not set:
+    set {updates.totalupdates} to 0
+
+on join:
+  if {updates.updatesList::*} is set:
+    loop {updates.updatesList::*}:
+      if {@DISPLAY_SUBTITLE_UPDATES} is true:
+        send player title "{@TITLE_COLOR}Update ##%loop-index%" with subtitle "{@SUBTITLE_COLOR}%loop-value%" for {@COOLDOWN} seconds
+        wait {@COOLDOWN} seconds
+      else:
+        send player title "{@SUBTITLE_COLOR}%loop-value%" with subtitle "{@TITLE_COLOR}Update ##%loop-index%" for {@COOLDOWN} seconds
+        wait {@COOLDOWN} seconds
+
+command /updates [<text>] [<text>]:
+  aliases: /ud
+  trigger:
+    if executor is console:
+      stop
+    if arg-1 is "view":
+      if {updates.updatesList::*} is set:
+        loop {updates.updatesList::*}:
+          if {@DISPLAY_SUBTITLE_UPDATES} is true:
+            send player title "{@TITLE_COLOR}Update ##%loop-index%" with subtitle "{@SUBTITLE_COLOR}%loop-value%" for {@COOLDOWN} seconds
+            wait {@COOLDOWN} seconds
+          else:
+            send player title "{@TITLE_COLOR}%loop-value%" with subtitle "{@SUBTITLE_COLOR}Update ##%loop-index%" for {@COOLDOWN} seconds
+            wait {@COOLDOWN} seconds
+    if "{@PERMISSION_REQUIRED}" is not "NONE":
+      if hasPlayerPermission(player, "{@PERMISSION_REQUIRED}") is false:
+        send "{@PERMISSION_ERROR_MESSAGE}"
+        stop
+    if arg-1 is not set:
+      send "{@ARG1_NOT_SET}"
+      stop
+    if arg-1 is "add":
+      if arg-2 is not set:
+        send "{@ARG2_NOT_SET}"
+        stop
+      add arg-2 to {updates.updatesList::*}
+      set {UPDATE_NAME} to arg-2
+      set {PLAYER_NAME} to "%player%"
+      set {UPDATE_ID} to size of {updates.updatesList::*}
+      send "{@ADDED_UPDATE}"
+      add 1 to {updates.totalupdates}
+      delete {UPDATE_NAME}
+      delete {PLAYER_NAME}
+      delete {UPDATE_ID}
+      stop
+    if arg-1 is "remove":
+      if arg-2 is not set:
+        send "{@ARG2_NOT_SET}"
+        stop
+      if {updates.updatesList::*} is set:
+        set {UPDATE_ID} to size of {updates.updatesList::*}
+        set {_i} to arg-2 parsed as integer
+        delete {updates.updatesList::%{_i}%}
+        delete {_i}
+        stop
+      set {PLAYER_NAME} to "%player%"
+      send "{@REMOVED_UPDATE}"
+      delete {PLAYER_NAME}
+      stop
+    if arg-1 is "clear":
+      if {updates.updatesList::*} is set:
+        delete {updates.updatesList::*}
+      send "{@CLEARED_UPDATES}"
+      stop
+    if arg-1 is "list":
+      if {updates.updatesList::*} is set:
+        send "{@LIST_UPDATES_HEADER}"
+
+        loop {updates.updatesList::*}:
+          set {UPDATE_ID} to "%loop-index%"
+          set {UPDATE_NAME} to "%loop-value%"
+          send "{@LIST_UPDATES_LINE_FORMAT}"
+        delete {UPDATE_ID}
+        delete {UPDATE_NAME}
+        stop
+      send "{@LIST_IS_EMPTY}"
+      stop
+
+# API #
+function hasPlayerPermission(plr: player, perm: text) :: boolean:
+  if {_plr} has permission {_perm}:
+    return true
+  return false
+
+function addUpdate(updateName: text):
+  if {updates.updateList::*} is set:
+    add {_updateName} to {updates.updateList::*}
+
+function removeUpdate(updateID: integer):
+  if {updates.updateList::*} is set:
+    if {updates.updateList::%{_updateID}%} is set:
+      delete {updates.updateList::%{_updateID}%}
+
+function clearUpdates():
+  if {updates.updatesList::*} is set:
+    delete {updates.updatesList::*}
+
+function viewUpdates(p: player):
+  if {updates.updatesList::*} is set:
+    loop {updates.updatesList::*}:
+      if {@DISPLAY_SUBTITLE_UPDATES} is true:
+        send {_p} title "{@TITLE_COLOR}Update ##%loop-index%" with subtitle "{@SUBTITLE_COLOR}%loop-value%" for {@COOLDOWN} seconds
+        wait {@COOLDOWN} seconds
+      else:
+        send {_p} title "{@TITLE_COLOR}%loop-value%" with subtitle "{@SUBTITLE_COLOR}Update ##%loop-index%" for {@COOLDOWN} seconds
+        wait {@COOLDOWN} seconds
