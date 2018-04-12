@@ -235,9 +235,9 @@ command /clearchat:
 command /bug [<string>]:
      trigger:
           argument 1 isn't set:
-               send "&b&lBug &7&l» &r/bug <your bug>" to player
+               send "&bBug » &r/bug <your bug>" to player
                stop
           send "&aBug submitted, thanks for helping us out!" to player
           loop all players:
                loop-player has permission rank.staff":
-                    send "&b&lBug &7&l» &r(%player%) &7%argument 1%" to loop-player
+                    send "&bBug &7» &r(%player%) &7%argument 1%" to loop-player
