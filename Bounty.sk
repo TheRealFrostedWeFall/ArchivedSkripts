@@ -1,0 +1,103 @@
+#-------------------------
+#Bounty Skript
+#By Stargazers and xX_Cookie
+#-------------------------
+
+
+
+
+
+Variables:
+    {bounty.%player%} = false
+    {bamount.%player%} = 0
+
+on first join:
+    set {bounty.%player%} to false
+    set {bamount.%player%} to 0
+
+options:
+    prefix: &6Vile &7»
+
+
+command /bounty [<offline player>] [<number>]:
+    trigger:
+        if argument 1 is not set:
+            send "{@prefix} Usage: /bounty <player> <amount>"
+        else:
+            if argument 2 is not set:
+                send "{@prefix} Usage: /bounty <player> <amount>"
+            else:
+                if {bounty.%arg-1%} is false:
+                    if argument 2 is greater than 0:
+                        if argument 2 is less than player's balance:
+                            send "{@prefix} You have placed a bounty of &c$%arg-2% &7on &c%arg-1%&7!" to player
+                            broadcast "%nl%{@prefix} A bounty of &c$%arg-2% &7has been placed on &c%arg-1%&7!"
+                            broadcast " "
+                            set {bounty.%arg-1%} to true
+                            set {bamount.%arg-1%} to argument 2
+                            subtract argument 2 from player's balance
+                        else:
+                            send "{@prefix} You do &cnot have &7sufficient funds!"
+                    else:
+                        send "{@prefix} You &ccannot &7place a bounty less than $0!"
+                else:
+                    send "{@prefix} There is &calready &7a bounty on &c%arg-1%&7!"
+
+on death:
+    if {bounty.%victim%} is true:
+        broadcast "{@prefix} The bounty on &c%victim%&7 was claimed by &c%attacker%&7!"
+        add {bamount.%victim%} to attacker's balance
+        set {bounty.%victim%} to false
+        send "{@prefix} You killed a bountied player! &c+$%{bamount.%victim%}%"
+    else:
+        stop
+
+command /fixbounties:
+    permission: sk.admin
+    permission message: &cNo permission.
+    trigger:
+        loop all players:
+            set {bounty.%loop-player%} to false
+            set {bamount.%loop-player%} to 0
+        send "&aSuccess! &7&o(Fixed Bounties!)"
+
+Command /bountyhelp:
+    Trigger:
+        Command /bountyhelp:
+    Trigger:
+        if player does not have the permission "sk.admin":
+            send "%nl%&6Vile &7» Bounty Command Help:%nl%%nl%&6» &7/bountyhelp%nl%&6»&7 Shows this info panel.%nl%%nl%%nl%&6» &7/bounty <player> <amount>%nl%&6»&7 Puts a bounty on a player  for a set amount.%nl%%nl%&6» &7/bounties%nl%&6»&7 Shows the current online users with bounties.%nl%%nl%&6» &7/checkbounty <player>%nl%&6»&7 Shows whether a player has a bounty or not. Also shows bounty amount.%nl%%nl%&6»&7 /bountycredits%nl%&6»&7 Shows credits for this skript.%nl%"
+        else:
+            send "%nl%&6Vile &7» Bounty Command Help:%nl%%nl%&6» &7/bountyhelp%nl%&6»&7 Shows this info panel.%nl%%nl%%nl%&6» &7/bounty <player> <amount>%nl%&6»&7 Puts a bounty on a player  for a set amount.%nl%%nl%&6» &7/bounties%nl%&6»&7 Shows the current online users with bounties.%nl%%nl%&6» &7/checkbounty <player>%nl%&6»&7 Shows whether a player has a bounty or not. Also shows bounty amount.%nl%%nl%&6»&7 /bountycredits%nl%&6»&7 Shows credits for this skript.%nl%%nl%%nl%&7-----==[&6 ADMIN HELP&7 ]==-----%nl%%nl%&6»&7 /fixbounties%nl%&6»&7 Deletes all online bounties.%nl%%nl%&6»&7 /delbounty <player>%nl%&6»&7 Deletes a specific players bounty.%nl%"
+
+command /bounties:
+    trigger:
+        loop all players:
+            if {bounty.%loop-player%} is true:
+                add loop-player to {_online bountied::*}
+        if size of {_online bountied::*} is 0:
+            send "%nl%{@prefix}There are currently &cno&7 bountied players &conline&7!%nl%"
+        else:
+            send "%nl%{@prefix} Current Online Bountied Players:%nl%%nl%&6» &7%{_online bountied::*}%%nl%"
+
+command /checkbounty [<offline player>]:
+    trigger:
+        if argument 1 is not set:
+            send "{@prefix} Usage: /checkbounty <player>"
+        else:
+            if {bounty.%arg-1%} is true:
+                send "%nl%{@prefix} Bounty On &c%arg-1%&7: &c$%{bamount.%arg-1%}%%nl%"
+            else:
+                send "%nl%{@prefix} &c%arg-1% &7has no bounty!%nl%"
+
+command /delbounty [<offline player>]:
+    permission: sk.admin
+    permission message: &cNo permission.
+    trigger:
+        set {bounty.%arg-1%} to false
+        set {bamount.%arg-1%} to 0
+        send "&aSuccess! &7&o(Deleted %arg-1%'s Bounty)"
+
+Command /bountycredits:
+    Trigger:
+        Send "%nl%&6Vile&7 » This skript was developed by:%nl%%nl%&6»&7 Stargazers%nl%&6» &7xX_Cookie%nl%"
