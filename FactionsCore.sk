@@ -241,3 +241,46 @@ command /bug [<string>]:
           loop all players:
                loop-player has permission rank.staff":
                     send "&bBug &7» &r(%player%) &7%argument 1%" to loop-player
+
+command /playtime [<text>]:
+	trigger:
+		if arg 1 is not set:
+			message "&b&lPlaytime &f• &fYou've played for:"
+			message "&f• Days: &b%{Days.%player%}% d"
+			message "&f• Hours: &b%{Hours.%player%}% h"
+			message "&f• Minutes: &b%{Minutes.%player%}% m"
+			message "&f• Seconds: &b%{Seconds.%player%}% s"
+		if arg 1 is set:
+			if arg 1 is "help":
+				message "&b&lPlaytime Help&f"
+				message "&b/playtime&f Show your playtime."
+				message "&b/playtime help&f Show this message."
+			if arg 1 is not "help":
+				message "Invalid argument!"
+
+every 1 second:
+	loop all players:
+		add 1 to {Seconds.%loop-player%}
+		if {Seconds.%loop-player%} is 60:
+			set {Seconds.%loop-player%} to 0
+			add 1 to {Minutes.%loop-player%}
+		if {Minutes.%loop-player%} is 60:
+			if {Seconds.%loop-player%} is 0:
+				add 1 to {Hours.%loop-player%}
+				set {Seconds.%loop-player%} to 0
+				set {Minutes.%loop-player%} to 0
+		if {Hours.%loop-player%} is 24:
+			if {Minutes.%loop-player%} is 60:
+				if {Seconds.%loop-player%} is 0:
+					add 1 to {Days.%loop-player%}
+					set {Hours.%loop-player%} to 0
+					set {Minutes.%loop-player%} to 0
+					set {Seconds.%loop-player%} to 0
+		if {Seconds.%loop-player%} is not set:
+			set {Seconds.%loop-player%} to 0
+		if {Minutes.%loop-player%} is not set:
+			set {Minutes.%loop-player%} to 0
+		if {Hours.%loop-player%} is not set:
+			set {Hours.%loop-player%} to 0
+		if {Days.%loop-player%} is not set:
+			set {Days.%loop-player%} to 0
