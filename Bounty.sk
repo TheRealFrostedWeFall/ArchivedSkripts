@@ -67,9 +67,9 @@ Command /bountyhelp:
         Command /bountyhelp:
     Trigger:
         if player does not have the permission "sk.admin":
-            send "%nl%&6Vile &7» Bounty Command Help:%nl%%nl%&6» &7/bountyhelp%nl%&6»&7 Shows this info panel.%nl%%nl%%nl%&6» &7/bounty <player> <amount>%nl%&6»&7 Puts a bounty on a player  for a set amount.%nl%%nl%&6» &7/bounties%nl%&6»&7 Shows the current online users with bounties.%nl%%nl%&6» &7/checkbounty <player>%nl%&6»&7 Shows whether a player has a bounty or not. Also shows bounty amount.%nl%%nl%&6»&7 /bountycredits%nl%&6»&7 Shows credits for this skript.%nl%"
+            send "%nl%&bVile &7» Bounty Command Help:%nl%%nl%&b» &7/bountyhelp%nl%&b»&7 Shows this info panel.%nl%%nl%%nl%&b» &7/bounty <player> <amount>%nl%&b»&7 Puts a bounty on a player  for a set amount.%nl%%nl%&b» &7/bounties%nl%&b»&7 Shows the current online users with bounties.%nl%%nl%&b» &7/checkbounty <player>%nl%&b»&7 Shows whether a player has a bounty or not. Also shows bounty amount.%nl%%nl%&b»&7 /bountycredits%nl%&b»&7 Shows credits for this skript.%nl%"
         else:
-            send "%nl%&6Vile &7» Bounty Command Help:%nl%%nl%&6» &7/bountyhelp%nl%&6»&7 Shows this info panel.%nl%%nl%%nl%&6» &7/bounty <player> <amount>%nl%&6»&7 Puts a bounty on a player  for a set amount.%nl%%nl%&6» &7/bounties%nl%&6»&7 Shows the current online users with bounties.%nl%%nl%&6» &7/checkbounty <player>%nl%&6»&7 Shows whether a player has a bounty or not. Also shows bounty amount.%nl%%nl%&6»&7 /bountycredits%nl%&6»&7 Shows credits for this skript.%nl%%nl%%nl%&7-----==[&6 ADMIN HELP&7 ]==-----%nl%%nl%&6»&7 /fixbounties%nl%&6»&7 Deletes all online bounties.%nl%%nl%&6»&7 /delbounty <player>%nl%&6»&7 Deletes a specific players bounty.%nl%"
+            send "%nl%&bVile &7» Bounty Command Help:%nl%%nl%&b» &7/bountyhelp%nl%&b»&7 Shows this info panel.%nl%%nl%%nl%&b» &7/bounty <player> <amount>%nl%&b»&7 Puts a bounty on a player  for a set amount.%nl%%nl%&b» &7/bounties%nl%&b»&7 Shows the current online users with bounties.%nl%%nl%&b» &7/checkbounty <player>%nl%&b»&7 Shows whether a player has a bounty or not. Also shows bounty amount.%nl%%nl%&b»&7 /bountycredits%nl%&b»&7 Shows credits for this skript.%nl%%nl%%nl%&7-----==[&b ADMIN HELP&7 ]==-----%nl%%nl%&b»&7 /fixbounties%nl%&b»&7 Deletes all online bounties.%nl%%nl%&b»&7 /delbounty <player>%nl%&b»&7 Deletes a specific players bounty.%nl%"
 
 command /bounties:
     trigger:
@@ -79,7 +79,7 @@ command /bounties:
         if size of {_online bountied::*} is 0:
             send "%nl%{@prefix}There are currently &cno&7 bountied players &conline&7!%nl%"
         else:
-            send "%nl%{@prefix} Current Online Bountied Players:%nl%%nl%&6» &7%{_online bountied::*}%%nl%"
+            send "%nl%{@prefix} Current Online Bountied Players:%nl%%nl%&b» &7%{_online bountied::*}%%nl%"
 
 command /checkbounty [<offline player>]:
     trigger:
@@ -101,4 +101,4 @@ command /delbounty [<offline player>]:
 
 Command /bountycredits:
     Trigger:
-        Send "%nl%&6Vile&7 » This skript was developed by:%nl%%nl%&6»&7 Stargazers%nl%&6» &7xX_Cookie%nl%"
+        Send "%nl%&bVile&7 » This skript was developed by:%nl%%nl%&b»&7 Stargazers%nl%&b» &7xX_Cookie%nl%"
