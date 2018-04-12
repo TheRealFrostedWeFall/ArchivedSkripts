@@ -2,8 +2,8 @@ on damage:
     if victim is a player:
         if attacker is a player:
             if {combat.%attacker%} = 0:
-                message "&8[&6VILE&8] &7You have been combat logged, do not log out!" to victim
-                message "&8[&6VILE&8] &7You have tagged %victim%, do not log out!" to attacker
+                message "&8[&bVile&8] &7You have been combat logged, do not log out!" to victim
+                message "&8[&bVile&8] &7You have tagged %victim%, do not log out!" to attacker
             set {combat.%attacker%} to 1
 every second in "world":
     loop all players:
@@ -12,17 +12,17 @@ every second in "world":
     loop all players:
         if {combat.%loop-player%} > 9:
             set {combat.%loop-player%} to 0
-            message "&8[&6VILE&8] &7You can now log out!" to loop-player
+            message "&8[&bVile&8] &7You can now log out!" to loop-player
 
 command /resetlog [<player>]:
     permission: log.staff
     trigger:
         if arg 1 is set:
             set {combat.%arg-1%} to 10
-            message "&8[&6VILE&8] &7Successfully reset their combat log!" to player
+            message "&8[&bVile&8] &7Successfully reset their combat log!" to player
         else:
-            message "&8[&6VILE&8] &7You didn't say a player!" to player
+            message "&8[&bVile&8] &7You didn't say a player!" to player
 
 on join:
     if {combat.%player%} > 0:
-        message "&8[&6VILE&8] &7You logged out in combat!"
+        message "&8[&bVile&8] &7You logged out in combat!"
