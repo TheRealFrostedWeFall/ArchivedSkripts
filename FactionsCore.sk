@@ -213,7 +213,7 @@ command /clearchat:
 		send "&8Clearing Chat.."
 		loop 200 times:
 			send ""
-		send "{@Prefix} Chat has been cleared by: &b%player%&7!"
+		broadcast "{@Prefix} Chat has been cleared by: &b%player%&7!"
 
 command /bug [<string>]:
      trigger:
