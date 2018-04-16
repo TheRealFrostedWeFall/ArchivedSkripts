@@ -1,0 +1,81 @@
+
+
+options:
+	item1: stone
+	item2: magma cream
+	item3: cobblestone
+	item4: air
+	item5: empty bucket
+	item6: air
+	item7: air
+	item8: netherrack
+	item9: air
+	noperm: &c&l(!) &cYou don't have permission to craft that.
+	name: &9&l&ko&6&lGen&e&lBucket&9&l&ko
+	lore: &cWall generator / scaffold
+	block: cobblestone
+	time: 46
+	timetype: ticks
+	blockplaced: lava
+	holding: lava bucket
+	prefix: &8[&bVILE&8] &7
+	sound: random.levelup
+
+# CraftItem
+on script load:
+	register new shaped recipe for {@holding} named "{@name}" with lore "{@lore}" using {@item1}, {@item2}, {@item3}, {@item4}, {@item5}, {@item6}, {@item7}, {@item8}, {@item9}
+		
+on craft of {@holding}:
+	player does not have permission "genwall.craft"
+	cancel event
+	send "{@noperm}" to the player
+	
+	
+# Command
+
+command /gengive <player> <number>:
+	usage: /gengive <player> <amount>
+	description: &eGive to a player an amount of X GenWall Buckets!
+	executable by: players
+	permission: genwall.admin
+	permission message: &eYou don't have permission to do that!
+	trigger:
+		if arg 1 is a player:
+			if arg 2 is a number:
+				set {_player} to arg 1
+				set {_amount} to arg 2
+				set {_item} to {@holding} named "{@name}" with lore "{@lore}"
+				loop {_amount} times:
+					add {_item} to {_player}'s inventory
+				play raw sound "{@sound}" at {_player} with pitch 1 volume 1 
+				send "{@prefix} You have been given %arg 2% GenWall Buckets" to {_player}
+				
+
+command /gengiveall <number>:
+	usage: /gengiveall <amount>
+	description: &eGive to all online players an amount of X GenWall Buckets!
+	executable by: players
+	permission: genwall.admin
+	permission message: &eYou don't have permission to do that!
+	trigger:
+		if arg 1 is a number:
+			set {_amount} to arg 1
+			set {_item} to {@holding} named "{@name}" with lore "{@lore}"
+			loop {_amount} times:
+				add {_item} to all players
+			play raw sound "{@sound}" at players with pitch 1 volume 1 
+			broadcast "{@prefix} You have been given %arg 1% GenWall Buckets"
+			send "{@prefix} All online players have been given %arg 1% GenWall Buckets" to player
+								
+				
+# GENWALL
+	
+on place of {@blockplaced}:
+	player has permission "genwall.use"
+	if player is holding a {@holding} named "{@name}" with lore "{@lore}":
+		set block to {@block}
+		Loop 256 times:
+			if block loop-number below event-block is air:
+				wait {@time} {@timetype}
+				set block loop-number below event-block to {@block}
+				
